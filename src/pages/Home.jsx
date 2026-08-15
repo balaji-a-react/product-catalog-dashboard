@@ -1,8 +1,11 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useProducts } from "../hooks/useProducts";
 import ProductCard from "../components/ProductCard";
 import SearchBar from "../components/SearchBar";
 import FilterBar from "../components/FilterBar";
+import Pagination from "../components/Pagination";
+
+const PRODUCTS_PER_PAGE = 8;
 
 export default function Home() {
   const { products, loading, error } = useProducts();
@@ -10,6 +13,7 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortOption, setSortOption] = useState("none");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const categories = useMemo(() => {
     const unique = new Set(products.map((p) => p.category));
@@ -42,6 +46,17 @@ export default function Home() {
 
     return result;
   }, [products, searchTerm, selectedCategory, sortOption]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedCategory, sortOption]);
+
+  const totalPages = Math.ceil(visibleProducts.length / PRODUCTS_PER_PAGE);
+
+  const paginatedProducts = useMemo(() => {
+    const start = (currentPage - 1) * PRODUCTS_PER_PAGE;
+    return visibleProducts.slice(start, start + PRODUCTS_PER_PAGE);
+  }, [visibleProducts, currentPage]);
 
   if (loading) {
     return (
@@ -81,11 +96,19 @@ export default function Home() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {visibleProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {paginatedProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </>
       )}
     </div>
   );
