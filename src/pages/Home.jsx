@@ -94,8 +94,8 @@ export default function Home() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-4 space-y-4">
-      <div className="flex flex-wrap items-center gap-3">
+    <div className="max-w-7xl mx-auto p-4 flex flex-col min-h-screen">
+      <div className="flex flex-wrap items-center gap-3 mb-4">
         <SearchBar value={searchTerm} onChange={setSearchTerm} />
         <FilterBar
           categories={categories}
@@ -104,34 +104,25 @@ export default function Home() {
           sortOption={sortOption}
           onSortChange={setSortOption}
         />
-        <button
-          onClick={() => setShowFavoritesOnly((prev) => !prev)}
-          className={`px-3 py-2 rounded-md text-sm border transition-colors ${
-            showFavoritesOnly
-              ? "bg-red-500 text-white border-red-500"
-              : "border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-300"
-          }`}
-        >
-          Favorites only
-        </button>
       </div>
+
       {visibleProducts.length > 0 && (
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
           Showing {(currentPage - 1) * PRODUCTS_PER_PAGE + 1}–
           {Math.min(currentPage * PRODUCTS_PER_PAGE, visibleProducts.length)} of{" "}
           {visibleProducts.length} results
         </p>
       )}
 
-      {visibleProducts.length === 0 ? (
-        <div className="flex justify-center items-center h-64">
-          <p className="text-gray-500 dark:text-gray-400">
-            No products match your search.
-          </p>
-        </div>
-      ) : (
-        <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="flex-1">
+        {visibleProducts.length === 0 ? (
+          <div className="flex justify-center items-center h-64">
+            <p className="text-gray-500 dark:text-gray-400">
+              No products match your search.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 content-start">
             {paginatedProducts.map((product) => (
               <ProductCard
                 key={product.id}
@@ -141,13 +132,15 @@ export default function Home() {
               />
             ))}
           </div>
+        )}
+      </div>
 
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </>
+      {visibleProducts.length > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       )}
     </div>
   );

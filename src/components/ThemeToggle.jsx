@@ -25,7 +25,7 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="flex items-center gap-1.5 px-3 py-2 rounded-md text-sm border border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+      className="cursor-pointer flex items-center gap-1.5 px-3 py-2 rounded-md text-sm border border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
       aria-label="Toggle dark and light theme"
     >
       {theme === "light" ? <Moon size={16} /> : <Sun size={16} />}

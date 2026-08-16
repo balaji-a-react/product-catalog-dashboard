@@ -5,11 +5,11 @@ export default function ProductCard({ product, isFavorite, onToggleFavorite }) {
   const { id, title, image, price, category } = product;
 
   return (
-    <div className="relative flex flex-col border border-gray-200 dark:border-gray-800 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow bg-white dark:bg-gray-900">
+    <div className="group relative flex flex-col border border-gray-200 dark:border-gray-800 rounded-lg p-4 shadow-sm hover:shadow-lg hover:border-gray-300 dark:hover:border-gray-700 transition-all duration-200 bg-white dark:bg-gray-900">
       <button
         onClick={() => onToggleFavorite(id)}
         aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
-        className="absolute top-3 right-3 p-1.5 rounded-full bg-white/80 dark:bg-gray-900/80 backdrop-blur"
+        className="cursor-pointer absolute z-10 top-3 right-3 p-1.5 rounded-full bg-white/80 dark:bg-gray-900/80 backdrop-blur pointer-events-auto hover:bg-white dark:hover:bg-gray-900 hover:scale-110 transition-all"
       >
         <Heart
           size={18}
@@ -20,7 +20,7 @@ export default function ProductCard({ product, isFavorite, onToggleFavorite }) {
       <img
         src={image}
         alt={title}
-        className="h-40 w-full object-contain mb-3"
+        className="h-40 w-full object-contain mb-3 transition-transform duration-300 group-hover:scale-105"
         loading="lazy"
       />
 
@@ -30,7 +30,7 @@ export default function ProductCard({ product, isFavorite, onToggleFavorite }) {
 
       <h3
         title={title}
-        className="text-sm font-medium line-clamp-2 mb-1 dark:text-white pr-2"
+        className="text-sm font-medium line-clamp-2 mb-1 dark:text-white pr-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
       >
         {title}
       </h3>
@@ -42,7 +42,7 @@ export default function ProductCard({ product, isFavorite, onToggleFavorite }) {
       <div className="mt-auto flex gap-2">
         <Link
           to={`/product/${id}`}
-          className="flex-1 text-center text-sm bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors"
+          className="flex-1 text-center text-sm bg-blue-600 text-white py-2 rounded hover:bg-blue-700 active:bg-blue-800 transition-colors"
         >
           View Details
         </Link>
