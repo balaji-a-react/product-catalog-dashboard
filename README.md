@@ -1,16 +1,75 @@
-# React + Vite
+# Product Catalog Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A responsive product catalog built with React.js, featuring search, filtering, sorting, pagination, and dark/light theme support.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React.js (JavaScript, no TypeScript)
+- React Router
+- Tailwind CSS
+- Vite
+- pnpm
 
-## React Compiler
+## Project Setup Instructions
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Clone the repository
+```bash
+   git clone <repo-url>
+   cd product-catalog-dashboard
+```
+2. Install dependencies
+```bash
+   pnpm install
+```
+3. Add environment variables — create a `.env` file in the root (see `.env.example`):
 
-## Expanding the ESLint configuration
+VITE_API_BASE_URL=https://fakestoreapi.com/products
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+4. Run the dev server
+```bash
+   pnpm run dev
+```
+5. Open `http://localhost:5173`
+
+## Features Implemented
+
+- Product listing with image, name, price, category, and a "View Details" button
+- Loading and error states while fetching data
+- Case-insensitive live search by product title
+- Category filter, combined with search and sorting
+- Sorting by price (asc/desc) and alphabetical (A-Z/Z-A)
+- Product details page (`/product/:id`) with image, description, category, price, and rating
+- Pagination (8 products per page) with Previous/Next and page numbers, resetting to page 1 on filter/search/sort change
+- Dark/Light theme toggle, persisted in `localStorage`
+- Responsive layout tested at 320px, 768px, and 1024px+
+- Duplicate product removal (see Hidden Requirement below)
+- Error handling for network failures, empty search results, and invalid product IDs
+
+## Hidden Requirement: Duplicate Products
+
+The API can occasionally return duplicate products. This is handled in `hooks/useProducts.js` using a `Map` keyed by product `id`, giving O(n) deduplication instead of an O(n²) nested-loop approach — so it stays efficient even if the dataset grows.
+
+## Performance Considerations
+
+Search, category filtering, and sorting are combined into a single `useMemo` in `Home.jsx`, so the list is only recomputed when `products`, `searchTerm`, `selectedCategory`, or `sortOption` actually change — not on unrelated re-renders (e.g. toggling the theme). Pagination slicing is a separate, cheaper `useMemo` layered on top of that result.
+
+## Assumptions Made
+
+- No API key is required for FakeStoreAPI, so `.env` is used only to store the base URL for environment flexibility, not for secrets.
+- "Invalid product ID" covers both non-numeric route params and numeric IDs that don't exist in the API (FakeStoreAPI returns an empty object with a 200 status for the latter, which is handled explicitly in `services/api.js`).
+
+## Challenges Faced
+
+- FakeStoreAPI returns `{}` with a 200 OK status for non-existent product IDs rather than a 404, which required manually checking for an empty response body in `fetchProductById`.
+- Tailwind v4's dark mode defaults to OS-level `prefers-color-scheme` rather than a toggleable class; this required explicitly opting into class-based dark mode via `@custom-variant dark` in `index.css`.
+
+## Future Improvements
+
+- Add skeleton loading placeholders instead of a plain loading message
+- Add a favorites feature persisted in localStorage
+- Add unit tests for the dedup logic and the search/filter/sort pipeline
+- Add basic accessibility improvements (focus states, ARIA labels on filter controls)
+
+## Live Deployment
+
+https://product-catalog-dashboard.netlify.app/
