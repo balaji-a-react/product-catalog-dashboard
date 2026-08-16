@@ -50,7 +50,7 @@ VITE_API_BASE_URL=https://fakestoreapi.com/products
 - Responsive layout tested at 320px, 768px, and 1024px+
 - Duplicate product removal (see Hidden Requirement below)
 - Error handling for network failures, empty search results, and invalid product IDs
-- Favorites feature with heart toggle on each product card, persisted in `localStorage`, plus a "Favorites only" filter and a live count in the header
+- Favorites feature with heart toggle on each product card, persisted in `localStorage`
 - Skeleton loading placeholders shown while products are being fetched
 - Lucide icon set used throughout (theme toggle, favorites, cart) instead of emoji, for consistent sizing and clear on/off states
 
