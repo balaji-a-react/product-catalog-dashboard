@@ -64,7 +64,10 @@ export default function ProductDetails() {
 
   return (
     <div className="p-4 max-w-3xl mx-auto">
-      <Link to="/" className="text-blue-600 hover:underline text-sm mb-4 inline-block">
+      <Link
+        to="/"
+        className="text-blue-600 hover:underline text-sm mb-4 inline-block"
+      >
         &larr; Back to all products
       </Link>
 
@@ -76,7 +79,9 @@ export default function ProductDetails() {
         />
 
         <div className="flex flex-col">
-          <h1 className="text-xl font-semibold mb-2 dark:text-white">{title}</h1>
+          <h1 className="text-xl font-semibold mb-2 dark:text-white">
+            {title}
+          </h1>
           <p className="text-xs text-gray-500 dark:text-gray-400 capitalize mb-2">
             {category}
           </p>

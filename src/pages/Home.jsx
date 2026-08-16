@@ -4,12 +4,16 @@ import ProductCard from "../components/ProductCard";
 import SearchBar from "../components/SearchBar";
 import FilterBar from "../components/FilterBar";
 import Pagination from "../components/Pagination";
+import { useFavorites } from "../hooks/useFavorites";
+import ProductCardSkeleton from "../components/ProductCardSkeleton";
 
 const PRODUCTS_PER_PAGE = 8;
 
 export default function Home() {
   const { products, loading, error } = useProducts();
+  const { favoriteIds, toggleFavorite, isFavorite } = useFavorites();
 
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortOption, setSortOption] = useState("none");
@@ -26,12 +30,16 @@ export default function Home() {
     if (searchTerm.trim() !== "") {
       const lowerSearch = searchTerm.toLowerCase();
       result = result.filter((p) =>
-        p.title.toLowerCase().includes(lowerSearch)
+        p.title.toLowerCase().includes(lowerSearch),
       );
     }
 
     if (selectedCategory !== "all") {
       result = result.filter((p) => p.category === selectedCategory);
+    }
+
+    if (showFavoritesOnly) {
+      result = result.filter((p) => favoriteIds.includes(p.id));
     }
 
     if (sortOption === "price-asc") {
@@ -45,7 +53,14 @@ export default function Home() {
     }
 
     return result;
-  }, [products, searchTerm, selectedCategory, sortOption]);
+  }, [
+    products,
+    searchTerm,
+    selectedCategory,
+    sortOption,
+    showFavoritesOnly,
+    favoriteIds,
+  ]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -60,8 +75,10 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <p className="text-gray-500 dark:text-gray-400">Loading products...</p>
+      <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <ProductCardSkeleton key={i} />
+        ))}
       </div>
     );
   }
@@ -78,7 +95,7 @@ export default function Home() {
 
   return (
     <div className="p-4 space-y-4">
-      <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <SearchBar value={searchTerm} onChange={setSearchTerm} />
         <FilterBar
           categories={categories}
@@ -87,7 +104,24 @@ export default function Home() {
           sortOption={sortOption}
           onSortChange={setSortOption}
         />
+        <button
+          onClick={() => setShowFavoritesOnly((prev) => !prev)}
+          className={`px-3 py-2 rounded-md text-sm border transition-colors ${
+            showFavoritesOnly
+              ? "bg-red-500 text-white border-red-500"
+              : "border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-300"
+          }`}
+        >
+          Favorites only
+        </button>
       </div>
+      {visibleProducts.length > 0 && (
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          Showing {(currentPage - 1) * PRODUCTS_PER_PAGE + 1}–
+          {Math.min(currentPage * PRODUCTS_PER_PAGE, visibleProducts.length)} of{" "}
+          {visibleProducts.length} results
+        </p>
+      )}
 
       {visibleProducts.length === 0 ? (
         <div className="flex justify-center items-center h-64">
@@ -99,7 +133,12 @@ export default function Home() {
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {paginatedProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard
+                key={product.id}
+                product={product}
+                isFavorite={isFavorite(product.id)}
+                onToggleFavorite={toggleFavorite}
+              />
             ))}
           </div>
 
