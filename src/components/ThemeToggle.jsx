@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
+import { Moon, Sun } from "lucide-react";
 
 export default function ThemeToggle() {
   const [theme, setTheme] = useState(() => {
-    // Read saved preference on first render, default to "light" if none set.
     return localStorage.getItem("theme") || "light";
   });
 
@@ -25,10 +25,11 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="px-3 py-2 border rounded-md text-sm dark:bg-gray-800 dark:text-white dark:border-gray-600"
+      className="flex items-center gap-1.5 px-3 py-2 rounded-md text-sm border border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
       aria-label="Toggle dark and light theme"
     >
-      {theme === "light" ? "🌙 Dark" : "☀️ Light"}
+      {theme === "light" ? <Moon size={16} /> : <Sun size={16} />}
+      {theme === "light" ? "Dark" : "Light"}
     </button>
   );
 }
