@@ -25,7 +25,7 @@ A responsive product catalog built with React.js, featuring search, filtering, s
    pnpm install
 ```
 
-3. Add environment variables — create a `.env` file in the root (see `.env.example`):
+3. Add environment variables — create a `.env.local` file in the root
 
 VITE_API_BASE_URL=https://fakestoreapi.com/products
 
