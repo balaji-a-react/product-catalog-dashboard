@@ -48,8 +48,9 @@ export default function ProductCard({ product, isFavorite, onToggleFavorite }) {
         </Link>
         <button
           aria-label="Add to cart"
+          title="Add to cart"
           onClick={() => alert(`Added "${title}" to cart`)}
-          className="px-3 py-2 rounded border border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+          className="px-2.5 py-2 rounded text-gray-400 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
         >
           <ShoppingCart size={16} />
         </button>
