@@ -1,6 +1,8 @@
 import { Routes, Route } from "react-router-dom";
+
 import Home from "./pages/Home";
 import ProductDetails from "./pages/ProductDetails";
+
 import ThemeToggle from "./components/ThemeToggle";
 
 function NotFound() {

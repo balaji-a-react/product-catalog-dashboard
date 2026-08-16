@@ -1,11 +1,14 @@
 import { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+
 import { useProducts } from "../hooks/useProducts";
+import { useFavorites } from "../hooks/useFavorites";
+
 import ProductCard from "../components/ProductCard";
 import SearchBar from "../components/SearchBar";
 import FilterBar from "../components/FilterBar";
 import Pagination from "../components/Pagination";
-import { useFavorites } from "../hooks/useFavorites";
-import ProductCardSkeleton from "../components/ProductCardSkeleton";
+
 
 const PRODUCTS_PER_PAGE = 8;
 
@@ -13,11 +16,38 @@ export default function Home() {
   const { products, loading, error } = useProducts();
   const { favoriteIds, toggleFavorite, isFavorite } = useFavorites();
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [sortOption, setSortOption] = useState("none");
   const [currentPage, setCurrentPage] = useState(1);
+
+  const searchTerm = searchParams.get("q") || "";
+  const selectedCategory = searchParams.get("category") || "all";
+  const sortOption = searchParams.get("sort") || "none";
+
+  const handleSearchChange = (value) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      value.trim() === "" ? next.delete("q") : next.set("q", value);
+      return next;
+    });
+  };
+
+  const handleCategoryChange = (value) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      value === "all" ? next.delete("category") : next.set("category", value);
+      return next;
+    });
+  };
+
+  const handleSortChange = (value) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      value === "none" ? next.delete("sort") : next.set("sort", value);
+      return next;
+    });
+  };
 
   const categories = useMemo(() => {
     const unique = new Set(products.map((p) => p.category));
@@ -77,7 +107,16 @@ export default function Home() {
     return (
       <div className="max-w-7xl mx-auto p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {Array.from({ length: 8 }).map((_, i) => (
-          <ProductCardSkeleton key={i} />
+          <div
+            key={i}
+            className="flex flex-col border border-gray-200 rounded-lg p-4 shadow-sm bg-white dark:bg-gray-800 dark:border-gray-700 animate-pulse"
+          >
+            <div className="h-40 w-full bg-gray-200 dark:bg-gray-700 rounded mb-3" />
+            <div className="h-3 w-3/4 bg-gray-200 dark:bg-gray-700 rounded mb-2" />
+            <div className="h-3 w-1/3 bg-gray-200 dark:bg-gray-700 rounded mb-2" />
+            <div className="h-4 w-1/4 bg-gray-200 dark:bg-gray-700 rounded mb-3" />
+            <div className="h-8 w-full bg-gray-200 dark:bg-gray-700 rounded mt-auto" />
+          </div>
         ))}
       </div>
     );
@@ -96,13 +135,13 @@ export default function Home() {
   return (
     <div className="max-w-7xl mx-auto p-4 flex flex-col min-h-screen">
       <div className="flex flex-wrap items-center gap-3 mb-4">
-        <SearchBar value={searchTerm} onChange={setSearchTerm} />
+        <SearchBar value={searchTerm} onChange={handleSearchChange} />
         <FilterBar
           categories={categories}
           selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
+          onCategoryChange={handleCategoryChange}
           sortOption={sortOption}
-          onSortChange={setSortOption}
+          onSortChange={handleSortChange}
         />
       </div>
 

@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Star, Heart, ShoppingCart, ChevronLeft } from "lucide-react";
+
 import { fetchProductById } from "../services/api";
+
 import { useFavorites } from "../hooks/useFavorites";
 
 export default function ProductDetails() {
