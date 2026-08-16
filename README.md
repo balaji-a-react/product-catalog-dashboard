@@ -13,22 +13,28 @@ A responsive product catalog built with React.js, featuring search, filtering, s
 ## Project Setup Instructions
 
 1. Clone the repository
+
 ```bash
    git clone <repo-url>
    cd product-catalog-dashboard
 ```
+
 2. Install dependencies
+
 ```bash
    pnpm install
 ```
+
 3. Add environment variables — create a `.env` file in the root (see `.env.example`):
 
 VITE_API_BASE_URL=https://fakestoreapi.com/products
 
 4. Run the dev server
+
 ```bash
    pnpm run dev
 ```
+
 5. Open `http://localhost:5173`
 
 ## Features Implemented
@@ -44,6 +50,9 @@ VITE_API_BASE_URL=https://fakestoreapi.com/products
 - Responsive layout tested at 320px, 768px, and 1024px+
 - Duplicate product removal (see Hidden Requirement below)
 - Error handling for network failures, empty search results, and invalid product IDs
+- Favorites feature with heart toggle on each product card, persisted in `localStorage`, plus a "Favorites only" filter and a live count in the header
+- Skeleton loading placeholders shown while products are being fetched
+- Lucide icon set used throughout (theme toggle, favorites, cart) instead of emoji, for consistent sizing and clear on/off states
 
 ## Hidden Requirement: Duplicate Products
 
@@ -57,6 +66,7 @@ Search, category filtering, and sorting are combined into a single `useMemo` in 
 
 - No API key is required for FakeStoreAPI, so `.env` is used only to store the base URL for environment flexibility, not for secrets.
 - "Invalid product ID" covers both non-numeric route params and numeric IDs that don't exist in the API (FakeStoreAPI returns an empty object with a 200 status for the latter, which is handled explicitly in `services/api.js`).
+- A cart icon button is shown on each product card as a UI affordance; cart functionality itself was out of scope for this assessment, so it currently shows a placeholder confirmation instead of adding to a real cart.
 
 ## Challenges Faced
 
@@ -65,8 +75,6 @@ Search, category filtering, and sorting are combined into a single `useMemo` in 
 
 ## Future Improvements
 
-- Add skeleton loading placeholders instead of a plain loading message
-- Add a favorites feature persisted in localStorage
 - Add unit tests for the dedup logic and the search/filter/sort pipeline
 - Add basic accessibility improvements (focus states, ARIA labels on filter controls)
 
